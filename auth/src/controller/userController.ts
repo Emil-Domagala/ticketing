@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
+import { RequestValidationError } from '../errors/requestValidationError.ts';
+import { DatabaseConnectionError } from '../errors/databaseConnectionError.ts';
 
 type ControllerFunctionType = (req: Request, res: Response, next?: NextFunction) => void;
 
@@ -11,7 +13,7 @@ export const signout: ControllerFunctionType = (req, res) => {};
 export const signup: ControllerFunctionType = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).send(errors.array());
+    throw new RequestValidationError(errors.array());
   }
 
   const { email, password } = req.body;
