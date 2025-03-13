@@ -4,7 +4,7 @@ import { BadRequestError } from '../errors/badRequestError.ts';
 import { createToken } from '../utils/jwtToken.ts';
 import { PasswordManager } from '../services/passwordManager.ts';
 
-export const currentUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const currentUser = async (req: Request, res: Response): Promise<void> => {
   res.send({ currentUser: req.currentUser || null });
 };
 
