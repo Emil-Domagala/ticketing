@@ -1,11 +1,20 @@
 import express from 'express';
 import userRoutes from './router/userRoutes.ts';
 import mongoose from 'mongoose';
+import cookieSession from 'cookie-session';
 import { errorHandler } from './middleware/errorHandler.ts';
 import { NotFoundError } from './errors/notFoundError.ts';
 
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
+app.use(
+  cookieSession({
+    signed: false,
+    secure: true,
+    httpOnly: true,
+  }),
+);
 
 app.use('/api/users', userRoutes);
 
@@ -15,14 +24,20 @@ app.all('*', async (_req, _res, next) => {
 
 app.use(errorHandler);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}!!`);
-});
+const start = async () => {
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+  }
 
-mongoose
-  .connect('mongodb://auth-mongo-srv:27017/auth')
-  .then(() => {
-    console.log('DB CONNECTED');
-  })
-  .catch((err) => console.log(err.message));
+  try {
+    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+  } catch (err) {
+    console.log(err);
+  }
+
+  app.listen(3000, () => {
+    console.log(`Listening on port 3000!!`);
+  });
+};
+
+start();
