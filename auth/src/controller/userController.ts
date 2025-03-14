@@ -40,7 +40,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction): P
     const { email, password } = req.body;
     const foundUser = await User.findOne({ email });
     if (foundUser) {
-      throw new BadRequestError('Email in use');
+      throw new BadRequestError('Email in use', 'email');
     }
     const user = User.build({ email, password });
 
