@@ -12,6 +12,7 @@ declare global {
 }
 
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("curr user");
   if (!req.session?.jwt) return next();
 
   try {

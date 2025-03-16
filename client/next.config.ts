@@ -1,11 +1,5 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  server: {
-    watch: {
-      poll: 500,
-    },
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

@@ -10,6 +10,10 @@ export interface ApiError {
   ];
 }
 
+export interface currentUser {
+  currentUser: string | null;
+}
+
 export interface authResponse {
   email: string;
   id: string;
@@ -20,6 +24,7 @@ class ApiService {
   private static instance: ApiService;
 
   private constructor() {
+    console.log('Api service initialized');
     this.api = axios.create({
       baseURL: '/api',
       headers: {
@@ -27,16 +32,6 @@ class ApiService {
       },
       withCredentials: true,
     });
-
-    this.api.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error: AxiosError) => {
-        if (error.response?.status === 401) {
-          window.location.href = '/auth';
-        }
-        return Promise.reject(this.handleError(error));
-      },
-    );
   }
 
   public static getInstance(): ApiService {
@@ -61,6 +56,14 @@ class ApiService {
   }
   public async signin(credentials: FormAuthSchema): Promise<authResponse> {
     const response: AxiosResponse<authResponse> = await this.api.post('/users/signin', credentials);
+    return response.data;
+  }
+  public async signout(): Promise<void> {
+    const response: AxiosResponse<void> = await this.api.post('/users/signout');
+    return response.data;
+  }
+  public async currentUser(): Promise<authResponse> {
+    const response: AxiosResponse<authResponse> = await this.api.post('/users/current-user');
     return response.data;
   }
 }

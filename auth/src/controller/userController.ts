@@ -5,6 +5,7 @@ import { createToken } from '../utils/jwtToken.ts';
 import { PasswordManager } from '../services/passwordManager.ts';
 
 export const currentUser = async (req: Request, res: Response): Promise<void> => {
+  console.log('Workedddd');
   res.send({ currentUser: req.currentUser || null });
 };
 
