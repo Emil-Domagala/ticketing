@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormMessage } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { FormAuthSchema, formAuthSchema } from '@/lib/validation';
 import { Button } from '@/components/ui/button';
@@ -29,10 +29,10 @@ const Auth = () => {
       let data;
       if (mode === 'signup') data = await apiService.signup(values);
       if (mode === 'signin') data = await apiService.signin(values);
-      console.log(data);
       router.push('/');
     } catch (e) {
       const error = e as ApiError;
+      console.log(error);
       if (error.errors) {
         error.errors.forEach((err) => {
           if (err.field && (err.field === 'email' || err.field === 'password')) {
@@ -67,10 +67,12 @@ const Auth = () => {
             label="Password"
             form={form}
           />
+          {form.formState.errors.root && (
+            <p className="text-red-500 text-sm text-center">{form.formState.errors.root.message}</p>
+          )}
           <Button className="mx-auto" disabled={isLoading} type="submit">
             {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
           </Button>
-          <FormMessage />
         </form>
       </Form>
       <div className="flex w-full justify-center">

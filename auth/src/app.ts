@@ -1,8 +1,8 @@
 import express from 'express';
-import userRoutes from './router/userRoutes.ts';
+import userRoutes from './router/userRoutes';
 import cookieSession from 'cookie-session';
-import { errorHandler } from './middleware/errorHandler.ts';
-import { NotFoundError } from './errors/notFoundError.ts';
+import { errorHandler } from './middleware/errorHandler';
+import { NotFoundError } from './errors/notFoundError';
 
 const app = express();
 app.set('trust proxy', true);

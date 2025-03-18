@@ -1,5 +1,5 @@
 import type { ValidationError } from 'express-validator';
-import { CustomError } from './customError.ts';
+import { CustomError } from './customError';
 
 export class RequestValidationError extends CustomError {
   public errors: ValidationError[];

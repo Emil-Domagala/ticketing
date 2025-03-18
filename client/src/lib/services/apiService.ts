@@ -24,7 +24,6 @@ class ApiService {
   private static instance: ApiService;
 
   private constructor() {
-    console.log('Api service initialized');
     this.api = axios.create({
       baseURL: '/api',
       headers: {
@@ -32,6 +31,18 @@ class ApiService {
       },
       withCredentials: true,
     });
+
+    // Handle errors
+    this.api.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error: AxiosError) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+        }
+        return Promise.reject(this.handleError(error));
+      },
+    );
   }
 
   public static getInstance(): ApiService {
@@ -52,10 +63,12 @@ class ApiService {
 
   public async signup(credentials: FormAuthSchema): Promise<authResponse> {
     const response: AxiosResponse<authResponse> = await this.api.post('/users/signup', credentials);
+
     return response.data;
   }
   public async signin(credentials: FormAuthSchema): Promise<authResponse> {
     const response: AxiosResponse<authResponse> = await this.api.post('/users/signin', credentials);
+
     return response.data;
   }
   public async signout(): Promise<void> {

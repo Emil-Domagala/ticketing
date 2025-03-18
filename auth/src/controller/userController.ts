@@ -1,11 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
-import User from '../model/user.ts';
-import { BadRequestError } from '../errors/badRequestError.ts';
-import { createToken } from '../utils/jwtToken.ts';
-import { PasswordManager } from '../services/passwordManager.ts';
+import User from '../model/user';
+import { BadRequestError } from '../errors/badRequestError';
+import { createToken } from '../utils/jwtToken';
+import { PasswordManager } from '../services/passwordManager';
 
 export const currentUser = async (req: Request, res: Response): Promise<void> => {
-  console.log('Workedddd');
   res.send({ currentUser: req.currentUser || null });
 };
 
@@ -14,7 +13,7 @@ export const signin = async (req: Request, res: Response, next: NextFunction): P
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      throw new BadRequestError('Invalid credentials');
+      throw new BadRequestError('Wrong email', 'email');
     }
 
     const passwordsMatch = await PasswordManager.compare(user.password, password);

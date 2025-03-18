@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../utils/jwtToken.ts';
-import type { UserPayload } from '../utils/jwtToken.ts';
-import { UnauthorizedError } from '../errors/unauthorizedError.ts';
+import { verifyToken } from '../utils/jwtToken';
+import type { UserPayload } from '../utils/jwtToken';
+import { UnauthorizedError } from '../errors/unauthorizedError';
 
 declare global {
   namespace Express {
@@ -12,7 +12,6 @@ declare global {
 }
 
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("curr user");
   if (!req.session?.jwt) return next();
 
   try {

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as userController from '../controller/userController.ts';
-import { checkIfErrorsFromValidator, validateSignup } from '../middleware/validateRequest.ts';
-import { currentUser } from '../middleware/authMiddleware.ts';
+import * as userController from '../controller/userController';
+import { checkIfErrorsFromValidator, validateSignup } from '../middleware/validateRequest';
+import { currentUser } from '../middleware/authMiddleware';
 
 const userRoutes = Router();
 

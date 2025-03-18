@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
-import { CustomError } from '../errors/customError.ts';
-import { InternalServerError } from '../errors/internalServerError.ts';
+import { CustomError } from '../errors/customError';
+import { InternalServerError } from '../errors/internalServerError';
 
 export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof CustomError) {
@@ -10,5 +10,4 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
 
   const defaultError = new InternalServerError();
   res.status(defaultError.statusCode).send({ errors: defaultError.serializeErrors() });
-
 };

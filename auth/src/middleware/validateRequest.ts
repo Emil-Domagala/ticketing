@@ -1,4 +1,4 @@
-import { RequestValidationError } from '../errors/requestValidationError.ts';
+import { RequestValidationError } from '../errors/requestValidationError';
 import type { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 

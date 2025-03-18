@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { PasswordManager } from '../services/passwordManager.ts';
+import { PasswordManager } from '../services/passwordManager';
 
 // An interface that desc the properties required to create new user
 interface UserAttrs {
