@@ -1,7 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../utils/jwtToken';
-import type { UserPayload } from '../utils/jwtToken';
+import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../errors/unauthorizedError';
+
+export interface UserPayload {
+  email: string;
+  id: string;
+}
 
 declare global {
   namespace Express {
@@ -11,15 +15,20 @@ declare global {
   }
 }
 
-export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session?.jwt) return next();
+export const currentUser = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.session);
+  if (!req.session?.jwt) {
+    console.log('First if');
+    return next();
+  }
 
   try {
-    const payload = verifyToken(req.session.jwt);
+    console.log('Trying to verify');
+    const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!) as UserPayload;
+    console.log('Got payload');
     req.currentUser = payload;
-  } catch (err) {
-    res.send({ currentUser: null });
-  }
+  } catch (err) {}
+
   next();
 };
 

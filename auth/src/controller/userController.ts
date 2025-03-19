@@ -1,10 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
 import User from '../model/user';
 import { BadRequestError } from '../errors/badRequestError';
-import { createToken } from '../utils/jwtToken';
 import { PasswordManager } from '../services/passwordManager';
+import jwt from 'jsonwebtoken';
+
+export const createToken = (email: string, id: string) => {
+  return jwt.sign({ email, id }, process.env.JWT_KEY!);
+};
 
 export const currentUser = async (req: Request, res: Response): Promise<void> => {
+  console.log('Hitted curr user');
+  // console.log(req);
   res.send({ currentUser: req.currentUser || null });
 };
 
@@ -22,7 +28,9 @@ export const signin = async (req: Request, res: Response, next: NextFunction): P
       throw new BadRequestError('Invalid credentials');
     }
     const userJwt = createToken(user.email, user.id);
+    console.log('userJwt: ' + userJwt);
     req.session = { jwt: userJwt };
+    console.log('Signin req.session' + req.session);
 
     res.status(200).send(user);
   } catch (err) {
@@ -47,7 +55,9 @@ export const signup = async (req: Request, res: Response, next: NextFunction): P
     await user.save();
 
     const userJwt = createToken(user.email, user.id);
+    console.log('userJwt: ' + userJwt);
     req.session = { jwt: userJwt };
+    console.log('Signup req.session' + req.session);
 
     res.status(201).send(user);
   } catch (err) {
