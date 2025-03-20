@@ -1,45 +1,22 @@
 'use client';
 
-import { apiService } from '@/lib/services/apiService';
 import { Button } from '../ui/button';
 import NavItem from './NavItem';
 import { useRouter } from 'next/navigation';
-import { use, useEffect, useState } from 'react';
+import { signout } from '@/app/actions/apiServerActions';
 
-const NavList = ({ cookie }: { cookie?: string }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!cookie);
-
+const NavList = ({ currentUserEmail }: { currentUserEmail: string | undefined }) => {
   const router = useRouter();
   const handleSignout = async () => {
-    // await fetch('http://ingress-nginx.ingress-nginx-controller.svc.cluster.local/api/users/signout', {
-    //   method: 'post',
-    //   credentials: 'include',
-    // });
-
-    await apiService.signout();
+    await signout();
     router.push('/');
+    router.refresh();
   };
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await apiService.currentUser();
-        setIsLoggedIn(true);
-      } catch (err) {
-        setIsLoggedIn(false);
-      }
-    };
-    const interval = setInterval(checkAuth, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="flex">
-      {isLoggedIn ? (
-        <form
-          action={() => {
-            handleSignout();
-          }}>
+      {currentUserEmail ? (
+        <form action={handleSignout}>
           <Button
             className="text-md p-3 h-[100%] transition:background duration-300 hover:bg-stone-500/20"
             variant="link">

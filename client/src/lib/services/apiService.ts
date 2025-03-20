@@ -71,14 +71,6 @@ class ApiService {
 
     return response.data;
   }
-  public async signout(): Promise<void> {
-    const response: AxiosResponse<void> = await this.api.post('/users/signout');
-    return response.data;
-  }
-  public async currentUser(): Promise<authResponse> {
-    const response: AxiosResponse<authResponse> = await this.api.post('/users/current-user');
-    return response.data;
-  }
 }
 
 export const apiService = ApiService.getInstance();

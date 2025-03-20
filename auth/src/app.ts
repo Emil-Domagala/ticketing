@@ -1,19 +1,13 @@
 import express from 'express';
 import userRoutes from './router/userRoutes';
-import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 import { errorHandler } from './middleware/errorHandler';
 import { NotFoundError } from './errors/notFoundError';
 
 const app = express();
 app.set('trust proxy', true);
 app.use(express.json());
-app.use(
-  cookieSession({
-    signed: false,
-    secure: process.env.NODE_ENV !== 'test',
-    httpOnly: true,
-  }),
-);
+app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 

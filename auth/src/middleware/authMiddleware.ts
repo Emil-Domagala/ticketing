@@ -4,7 +4,9 @@ import { UnauthorizedError } from '../errors/unauthorizedError';
 
 export interface UserPayload {
   email: string;
-  id: string;
+  userId: string;
+  iat: number;
+  exp: number;
 }
 
 declare global {
@@ -16,19 +18,23 @@ declare global {
 }
 
 export const currentUser = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.session);
-  if (!req.session?.jwt) {
-    console.log('First if');
+  const token = req.cookies.jwt;
+  if (!token) {
     return next();
   }
 
-  try {
-    console.log('Trying to verify');
-    const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!) as UserPayload;
-    console.log('Got payload');
+  jwt.verify(token, process.env.JWT_KEY!, async (err: any, payload: any) => {
+    if (err) {
+      res.cookie('jwt', '', {
+        expires: new Date(0),
+        secure: process.env.NODE_ENV !== 'test',
+        httpOnly: true,
+        sameSite: 'none',
+      });
+      throw new UnauthorizedError();
+    }
     req.currentUser = payload;
-  } catch (err) {}
-
+  });
   next();
 };
 

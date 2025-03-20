@@ -26,10 +26,11 @@ const Auth = () => {
   const onSubmit = async (values: FormAuthSchema) => {
     try {
       setIsLoading(true);
-      let data;
-      if (mode === 'signup') data = await apiService.signup(values);
-      if (mode === 'signin') data = await apiService.signin(values);
+      if (mode === 'signup') await apiService.signup(values);
+      if (mode === 'signin') await apiService.signin(values);
+
       router.push('/');
+      router.refresh();
     } catch (e) {
       const error = e as ApiError;
       console.log(error);
