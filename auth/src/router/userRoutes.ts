@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import * as userController from '../controller/userController';
-import { checkIfErrorsFromValidator, validateSignup } from '../middleware/validateRequest';
-import { currentUser } from '../middleware/authMiddleware';
+import { validateSignup } from '../middleware/validateSignup';
+import { currentUser } from '@emil_tickets/common';
+import { checkIfErrorsFromValidator } from '@emil_tickets/common';
 
 const userRoutes = Router();
 

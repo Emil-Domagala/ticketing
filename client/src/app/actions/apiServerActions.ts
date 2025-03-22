@@ -3,9 +3,8 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { cookies } from 'next/headers';
 
-
-//Handle all cookies automaticly 
-const setCookie = async (setCookieHeaders) => {
+//Handle all cookies automaticly
+const setCookie = async (setCookieHeaders: string[] | undefined) => {
   if (!setCookieHeaders) return;
 
   const cookieStore = await cookies();
@@ -13,7 +12,14 @@ const setCookie = async (setCookieHeaders) => {
   for (const cookieStr of setCookieHeaders) {
     const cookieParts = cookieStr.split('; ');
     const [name, value] = cookieParts[0].split('=');
-    const cookieOptions: any = {};
+    const cookieOptions: {
+      expires?: Date;
+      httpOnly?: boolean;
+      secure?: boolean;
+      sameSite?: 'lax' | 'strict' | 'none' | undefined;
+      path?: string;
+      domain?: string;
+    } = {};
 
     let shouldDelete = false; // Flag to check if we should delete this cookie
 
@@ -35,7 +41,7 @@ const setCookie = async (setCookieHeaders) => {
       } else if (lowerKey === 'secure') {
         cookieOptions.secure = true;
       } else if (lowerKey === 'samesite') {
-        cookieOptions.sameSite = val;
+        cookieOptions.sameSite = val as 'lax' | 'strict' | 'none' | undefined;
       } else if (lowerKey === 'path') {
         cookieOptions.path = val;
       } else if (lowerKey === 'domain') {
@@ -92,7 +98,6 @@ const handleError = (error: AxiosError): ApiError => {
 
 export async function signout(): Promise<void> {
   try {
-    console.log('trying to signout');
     const response = await api.post('/users/signout');
     const setCookieHeaders = response.headers['set-cookie'];
     await setCookie(setCookieHeaders);
@@ -100,6 +105,8 @@ export async function signout(): Promise<void> {
     throw handleError(error as AxiosError);
   }
 }
+
+//Fetch user
 
 export async function fetchCurrentUser(): Promise<currentUserResponse> {
   try {
