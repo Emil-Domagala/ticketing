@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import User from '../model/user';
-import { BadRequestError } from '@emil_tickets/common'; 
+import { BadRequestError } from '@emil_tickets/common';
 import { PasswordManager } from '../services/passwordManager';
 import jwt from 'jsonwebtoken';
 
@@ -65,8 +65,6 @@ export const signup = async (req: Request, res: Response, next: NextFunction): P
     const user = User.build({ email, password });
 
     await user.save();
-
-    console.log('user saved');
 
     res.cookie('jwt', createToken(email, user.id), {
       maxAge: tokenExpiration,

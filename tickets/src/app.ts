@@ -1,13 +1,13 @@
 import express from 'express';
 import ticketsRoutes from './router/ticketsRoutes';
 import cookieParser from 'cookie-parser';
-import { errorHandler } from '@emil_tickets/common';
-import { NotFoundError } from '@emil_tickets/common';
+import { currentUser, errorHandler, NotFoundError } from '@emil_tickets/common';
 
 const app = express();
 app.set('trust proxy', true);
 app.use(express.json());
 app.use(cookieParser());
+app.use(currentUser);
 
 app.use('/api/tickets', ticketsRoutes);
 
