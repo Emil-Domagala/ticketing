@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '@emil_tickets/common';
 import Ticket from '../model/ticketModel';
+import { TicketCreatedPublisher } from '../events/publishers/ticketCreatedPublisher';
+import { natsClient } from '../natsClient';
 
 export const getTickets = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -35,8 +37,14 @@ export const postTicket = async (req: Request, res: Response, next: NextFunction
 
     const ticket = Ticket.build({ title, price, userId: req.currentUser!.userId });
 
-    await ticket.save();
-    res.status(201).send(ticket);
+    const savedTicket = await ticket.save();
+    new TicketCreatedPublisher(natsClient.client).publish({
+      id: savedTicket.id,
+      title: savedTicket.title,
+      price: savedTicket.price,
+      userId: savedTicket.userId,
+    });
+    res.status(201).send(savedTicket);
   } catch (err) {
     next(err);
   }
