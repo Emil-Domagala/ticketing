@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { natsClient } from '../../natsClient';
 
 const createTicket = (cookie: string[]) => {
   const title = 'Correct Title';
@@ -91,4 +92,21 @@ it('updates the ticket if provided valid inputs', async () => {
     .expect(200);
   expect(updatedTicket.body.title).toEqual(newTitle);
   expect(updatedTicket.body.price).toEqual(newPrice);
+});
+it('publishes an event', async () => {
+  const newTitle = 'New Title';
+  const newPrice = 100;
+  const cookie = global.signin();
+
+  const ticket = await createTicket(cookie);
+  await request(app)
+    .put(`/api/tickets/${ticket.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: newTitle,
+      price: newPrice,
+    })
+    .expect(200);
+
+  expect(natsClient.client.publish).toHaveBeenCalled();
 });

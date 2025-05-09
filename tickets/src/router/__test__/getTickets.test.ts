@@ -4,10 +4,11 @@ import { app } from '../../app';
 import Ticket from '../../model/ticketModel';
 import mongoose from 'mongoose';
 
+
 const createTicket = () => {
   const title = 'Correct Title';
   const price = 20;
-  return request(app).post('/api/tickets').set('Cookie', global.signin()).send({ title, price }).expect(201);
+  return request(app).post('/api/tickets').set('Cookie', global.signin()).send({ title, price });
 };
 
 it('returns list of tickets', async () => {

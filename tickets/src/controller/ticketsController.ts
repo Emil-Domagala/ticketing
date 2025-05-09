@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError, UnauthorizedError } from '@emil_tickets
 import Ticket from '../model/ticketModel';
 import { TicketCreatedPublisher } from '../events/publishers/ticketCreatedPublisher';
 import { natsClient } from '../natsClient';
+import { TicketUpdatedPublisher } from '../events/publishers/ticketUpdatedPublisher';
 
 export const getTickets = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -38,7 +39,7 @@ export const postTicket = async (req: Request, res: Response, next: NextFunction
     const ticket = Ticket.build({ title, price, userId: req.currentUser!.userId });
 
     const savedTicket = await ticket.save();
-    new TicketCreatedPublisher(natsClient.client).publish({
+    await new TicketCreatedPublisher(natsClient.client).publish({
       id: savedTicket.id,
       title: savedTicket.title,
       price: savedTicket.price,
@@ -62,7 +63,14 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
       throw new UnauthorizedError();
     }
     ticket.set({ title, price });
-    await ticket.save();
+    const savedTicket = await ticket.save();
+    await new TicketUpdatedPublisher(natsClient.client).publish({
+      id: savedTicket.id,
+      title: savedTicket.title,
+      price: savedTicket.price,
+      userId: savedTicket.userId,
+    });
+
     res.send(ticket);
   } catch (err) {
     next(err);
