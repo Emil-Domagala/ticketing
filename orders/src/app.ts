@@ -1,5 +1,5 @@
 import express from 'express';
-import ticketsRoutes from './router/ticketsRoutes';
+import orderRoutes from './router/orderRouter';
 import cookieParser from 'cookie-parser';
 import { currentUser, errorHandler, NotFoundError } from '@emil_tickets/common';
 
@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(currentUser);
 
-app.use('/api/tickets', ticketsRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.all('*', async (_req, _res, next) => {
   next(new NotFoundError());
