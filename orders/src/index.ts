@@ -1,6 +1,8 @@
 import { app } from './app';
 import mongoose from 'mongoose';
 import { natsClient } from './natsClient';
+import { TicketCreatedListener } from './events/listeners/ticketCreatedListener';
+import { TicketUpdatedListener } from './events/listeners/ticketUpdatedListener';
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -20,6 +22,9 @@ const start = async () => {
   }
 
   try {
+    console.log('NATS_CLUSTER_ID: ' + process.env.NATS_CLUSTER_ID);
+    console.log('NATS_URL: ' + process.env.NATS_URL);
+    console.log('NATS_CLIENT_ID: ' + process.env.NATS_CLIENT_ID);
     await natsClient.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL);
 
     natsClient.client.on('close', () => {
@@ -28,6 +33,9 @@ const start = async () => {
     });
     process.on('SIGINT', () => natsClient.client.close());
     process.on('SIGTERM', () => natsClient.client.close());
+
+    new TicketCreatedListener(natsClient.client).listen();
+    new TicketUpdatedListener(natsClient.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
   } catch (err) {

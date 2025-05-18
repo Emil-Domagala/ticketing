@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "@emil_tickets/common": "^1.0.5",
+    "@emil_tickets/common": "^1.0.10",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
     "axios": "^1.8.4",
@@ -27,6 +27,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.2",
+    "mongoose-update-if-current": "^1.4.0",
     "node-nats-streaming": "^0.3.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.2"

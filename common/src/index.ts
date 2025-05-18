@@ -15,6 +15,10 @@ export * from './events/baseListener';
 export * from './events/basePublisher';
 
 export * from './events/types/subjects';
+export * from './events/types/orderStatus';
+
+// Events
 export * from './events/types/ticketCreatedEvent';
 export * from './events/types/ticketUpdatedEvent';
-export * from './events/types/orderStatus';
+export * from './events/types/orderCreatedEvent';
+export * from './events/types/orderCancelledEvent';

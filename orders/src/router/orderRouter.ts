@@ -8,6 +8,6 @@ const orderRoutes = Router();
 orderRoutes.get('/', currentUser, requireAuth, validateCreateOrder, orderController.getOrders);
 orderRoutes.get('/:orderId', currentUser, requireAuth, orderController.getOrder);
 orderRoutes.post('/', currentUser, requireAuth, validateCreateOrder, checkIfErrorsFromValidator, orderController.createOrder);
-orderRoutes.delete('/:orderId', currentUser, requireAuth, orderController.deleteOrder);
+orderRoutes.patch('/:orderId', currentUser, requireAuth, orderController.deleteOrder);
 
 export default orderRoutes;

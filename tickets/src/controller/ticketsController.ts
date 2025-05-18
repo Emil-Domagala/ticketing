@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { BadRequestError, NotFoundError, UnauthorizedError } from '@emil_tickets/common';
+import { NotFoundError, UnauthorizedError } from '@emil_tickets/common';
 import Ticket from '../model/ticketModel';
 import { TicketCreatedPublisher } from '../events/publishers/ticketCreatedPublisher';
 import { natsClient } from '../natsClient';
@@ -44,6 +44,7 @@ export const postTicket = async (req: Request, res: Response, next: NextFunction
       title: savedTicket.title,
       price: savedTicket.price,
       userId: savedTicket.userId,
+      version: savedTicket.version,
     });
     res.status(201).send(savedTicket);
   } catch (err) {
@@ -69,6 +70,7 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
       title: savedTicket.title,
       price: savedTicket.price,
       userId: savedTicket.userId,
+      version: savedTicket.version,
     });
 
     res.send(ticket);
