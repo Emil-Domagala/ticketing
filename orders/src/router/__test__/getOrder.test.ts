@@ -12,7 +12,7 @@ it('Can not be accessed if user is NOT signin', async () => {
 });
 
 it('Can not access others ppl orders', async () => {
-  const ticket1 = Ticket.build({ title: 'concert', price: 20 });
+  const ticket1 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
 
   await ticket1.save();
   const userOne = global.signin();
@@ -23,7 +23,7 @@ it('Can not access others ppl orders', async () => {
   await request(app).get(`/api/orders/${orderUnwanted.id}`).set('Cookie', userTwo).send({}).expect(401);
 });
 it('Returns order sucessfully', async () => {
-  const ticket1 = Ticket.build({ title: 'concert', price: 20 });
+  const ticket1 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
 
   await ticket1.save();
   const userOne = global.signin();

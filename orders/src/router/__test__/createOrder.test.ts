@@ -20,16 +20,16 @@ it('returns error if no ticket found', async () => {
   expect(res.status).toEqual(404);
 });
 it('returns error if ticket is already reserved', async () => {
-  const ticket = Ticket.build({ id: 'a', title: 'concert', price: 20 });
+  const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
   await ticket.save();
-  const order = Order.build({ ticket, userId: '123', status: OrderStatus.Created, expiresAt: new Date(Date.now() + 15 * 60 * 1000) });
+  const order = Order.build({ ticket, userId: new mongoose.Types.ObjectId().toHexString(), status: OrderStatus.Created, expiresAt: new Date(Date.now() + 15 * 60 * 1000) });
   await order.save();
 
   const res = await request(app).post('/api/orders').set('Cookie', global.signin()).send({ ticketId: ticket.id });
   expect(res.status).toEqual(400);
 });
 it('reserve a ticket and emits an order created event', async () => {
-  const ticket = Ticket.build({ id: 'a', title: 'concert', price: 20 });
+  const ticket = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
   await ticket.save();
 
   const res = await request(app).post('/api/orders').set('Cookie', global.signin()).send({ ticketId: ticket.id });

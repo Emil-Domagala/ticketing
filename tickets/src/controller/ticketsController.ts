@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { NotFoundError, UnauthorizedError } from '@emil_tickets/common';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '@emil_tickets/common';
 import Ticket from '../model/ticketModel';
 import { TicketCreatedPublisher } from '../events/publishers/ticketCreatedPublisher';
 import { natsClient } from '../natsClient';
@@ -63,6 +63,11 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
     if (ticket.userId.toString() !== req.currentUser!.userId.toString()) {
       throw new UnauthorizedError();
     }
+
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
+    }
+
     ticket.set({ title, price });
     const savedTicket = await ticket.save();
     await new TicketUpdatedPublisher(natsClient.client).publish({

@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import Ticket from '../../model/ticketModel';
+import mongoose from 'mongoose';
 
 it('Can not be accessed if user is NOT signin', async () => {
   const res = await request(app).get('/api/orders').send({});
@@ -8,9 +9,9 @@ it('Can not be accessed if user is NOT signin', async () => {
 });
 
 it('returns orders for a given user', async () => {
-  const ticket1 = Ticket.build({ title: 'concert', price: 20 });
-  const ticket2 = Ticket.build({ title: 'concert1', price: 10 });
-  const ticket3 = Ticket.build({ title: 'concert2', price: 30 });
+  const ticket1 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
+  const ticket2 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert1', price: 10 });
+  const ticket3 = Ticket.build({ id: new mongoose.Types.ObjectId().toHexString(), title: 'concert2', price: 30 });
   await Promise.all([ticket1.save(), ticket2.save(), ticket3.save()]);
   const userOne = global.signin();
   const userTwo = global.signin();

@@ -14,7 +14,7 @@ it('Can not be accessed if user is NOT signin', async () => {
 });
 
 it('Can not acces others ppl orders', async () => {
-  const ticket1 = Ticket.build({id:'a', title: 'concert', price: 20 });
+  const ticket1 = Ticket.build({id:new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
 
   await ticket1.save();
   const userOne = global.signin();
@@ -25,7 +25,7 @@ it('Can not acces others ppl orders', async () => {
 });
 
 it('Sucessfully returns order with new order status and emits an order cancelled event', async () => {
-  const ticket1 = Ticket.build({id:'a', title: 'concert', price: 20 });
+  const ticket1 = Ticket.build({id:new mongoose.Types.ObjectId().toHexString(), title: 'concert', price: 20 });
 
   await ticket1.save();
   const userOne = global.signin();

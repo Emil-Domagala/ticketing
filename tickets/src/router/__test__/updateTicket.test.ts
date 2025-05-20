@@ -3,6 +3,7 @@ import { app } from '../../app';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { natsClient } from '../../natsClient';
+import Ticket from '../../model/ticketModel';
 
 const createTicket = (cookie: string[]) => {
   const title = 'Correct Title';
@@ -109,4 +110,25 @@ it('publishes an event', async () => {
     .expect(200);
 
   expect(natsClient.client.publish).toHaveBeenCalled();
+});
+
+it('rejects updates if the ticket is reserved', async () => {
+  const newTitle = 'New Title';
+  const newPrice = 100;
+  const cookie = global.signin();
+
+  const res = await createTicket(cookie);
+
+  const ticket = await Ticket.findById(res.body.id);
+  ticket!.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+  await ticket!.save();
+
+  await request(app)
+    .put(`/api/tickets/${ticket!.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: newTitle,
+      price: newPrice,
+    })
+    .expect(400);
 });
