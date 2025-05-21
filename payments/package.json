@@ -1,5 +1,5 @@
 {
-  "name": "orders",
+  "name": "expiration",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "@emil_tickets/common": "^1.0.15",
+    "@emil_tickets/common": "^1.0.10",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
     "cookie-parser": "^1.4.7",

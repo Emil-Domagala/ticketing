@@ -6,7 +6,7 @@ import { natsClient } from '../natsClient';
 import { OrderCancelledPublisher } from '../events/publishers/orderCancelledPublisher';
 import { OrderCreatedPublisher } from '../events/publishers/orderCreatedPublisher';
 
-const EXPIRES_AFTER_MILS = 15 * 60 * 1000;
+const EXPIRES_AFTER_MILS = 60 * 1000;
 
 export const getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.currentUser!;
@@ -75,6 +75,7 @@ export const deleteOrder = async (req: Request, res: Response, next: NextFunctio
   const { userId } = req.currentUser!;
   try {
     const order = await Order.findById(orderId).populate('ticket');
+
     if (!order) {
       throw new NotFoundError();
     }
