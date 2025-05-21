@@ -22,7 +22,6 @@
     "@emil_tickets/common": "^1.0.10",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
-    "axios": "^1.8.4",
     "cookie-parser": "^1.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
