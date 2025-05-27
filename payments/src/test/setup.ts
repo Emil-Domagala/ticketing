@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
 declare global {
-  var signin: () => string[];
+  var signin: (userId?: string) => string[];
 }
 
 jest.mock('../natsClient');
@@ -35,10 +35,10 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signin = () => {
+global.signin = (userId?: string) => {
   const tokenExpiration = 60 * 60 * 1000 * 2;
 
-  const token = jwt.sign({ email: 'test@test.com', userId: Math.random() }, process.env.JWT_KEY!, {
+  const token = jwt.sign({ email: 'test@test.com', userId: userId || new mongoose.Types.ObjectId().toHexString() }, process.env.JWT_KEY!, {
     expiresIn: tokenExpiration,
   });
 
