@@ -7,6 +7,7 @@ declare global {
 }
 
 jest.mock('../natsClient');
+jest.mock('../stripe.ts');
 let mongo: MongoMemoryServer;
 
 beforeAll(async () => {
